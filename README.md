@@ -118,7 +118,7 @@ Convolution Result:
 
 1. Compile the code with any standard C++ compiler:
 ```bash
-g++ convolution.cpp -o convolution
+g++ main.cpp -o convolution
 ```
 
 2. Run the executable:
