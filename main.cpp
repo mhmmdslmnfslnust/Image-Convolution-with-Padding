@@ -12,7 +12,7 @@ const int MIN_SIZE = 3;
 const int MAX_SIZE = 12;
 
 int main() {
-    srand(time(0));
+    srand(static_cast<unsigned int>(time(nullptr)));
 
     // Get image size from user with validation
     int imageSize;
