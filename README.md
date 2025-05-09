@@ -75,26 +75,32 @@ The program consists of the following functions:
 
 ## Output Example
 The original image matrix is:
-The original image matrix is:
+```
   156  248    9   87   22   81
   234   46  103   30  135  144
   213   93  112   32  132  111
    22  219  144  215  128  251
    89   63   63   27   30  187
   163  157  206   82   47   73
+```
 
 The kernel matrix is:
+```
    -1    0    1
    -1    0    1
    -1    0    1
+```
 
 Convolution Result:
+```
   294  -278  -177    45   108  -157
   387  -379  -238    65   187  -289
   358  -110   -81    36   229  -395
   375    -5  -101   -29   275  -290
   439   139  -115  -208   187  -205
   220    17  -111  -192   151   -77
+```
+
 
 ---
 
