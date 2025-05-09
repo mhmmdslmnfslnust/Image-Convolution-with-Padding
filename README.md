@@ -1,6 +1,8 @@
 # Image Convolution with Padding
 
-This C++ program demonstrates a basic 2D convolution operation between an image and a kernel with zero-padding. The implementation shows how to perform edge detection using a simple Sobel-like kernel.
+This C++ program performs a 2D convolution on a randomly generated 6x6 grayscale image using a manually-defined 3x3 kernel. It simulates image processing concepts such as zero padding, kernel application, and matrix-based convolution.
+
+The program demonstrates fundamental image processing operations that are common in computer vision, edge detection, and digital filtering.
 
 ## Table of Contents
 - [Overview](#overview)
@@ -90,7 +92,6 @@ The kernel matrix is:
    -1    0    1
    -1    0    1
 ```
-
 Convolution Result:
 ```
   294  -278  -177    45   108  -157
@@ -100,7 +101,6 @@ Convolution Result:
   439   139  -115  -208   187  -205
   220    17  -111  -192   151   -77
 ```
-
 
 ---
 
@@ -120,7 +120,7 @@ Convolution Result:
 
 1. Compile the code with any standard C++ compiler:
 ```bash
-g++ convolution.cpp -o convolution
+g++ main.cpp -o convolution
 ```
 
 2. Run the executable:
