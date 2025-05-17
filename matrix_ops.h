@@ -1,19 +1,22 @@
 #ifndef MATRIX_OPS_H
 #define MATRIX_OPS_H
 
-struct ImageMatrix {
-    int** data;
-    int size;
-};
+#include <iostream>
 
-struct KernelMatrix {
-    int data[3][3];
-};
+// Configurable constants
+extern const int MIN_SIZE;
+extern const int MAX_SIZE;
 
-// Matrix operation functions
-ImageMatrix* createImageMatrix(int size);
-void deleteImageMatrix(ImageMatrix* matrix);
-void displayMatrix(const ImageMatrix* matrix, const char* title);
-void generateRandomImage(ImageMatrix* matrix);
+// Function to get and validate user input for matrix size
+int getValidatedMatrixSize();
 
-#endif
+// Functions for matrix operations
+void generateRandomImage(int** image, int size);
+void displayMatrix(int** matrix, int size, const char* title);
+void initializeWithZeros(int** matrix, int size);
+
+// Memory management functions
+int** allocateMatrix(int size);
+void deallocateMatrix(int** matrix, int size);
+
+#endif // MATRIX_OPS_H
