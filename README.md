@@ -1,8 +1,8 @@
 # Image Convolution with Padding
 
-This C++ program performs a 2D convolution on a randomly generated 6x6 grayscale image using a manually-defined 3x3 kernel. It simulates image processing concepts such as zero padding, kernel application, and matrix-based convolution.
+This C++ program performs 2D convolution on dynamically-sized grayscale images using various kernels. It demonstrates image processing concepts such as zero padding, kernel application, and matrix-based convolution operations.
 
-The program demonstrates fundamental image processing operations that are common in computer vision, edge detection, and digital filtering.
+The program showcases fundamental image processing operations common in computer vision, edge detection, and digital filtering applications.
 
 ## Table of Contents
 - [Overview](#overview)
@@ -20,90 +20,111 @@ The program demonstrates fundamental image processing operations that are common
 ## Overview
 
 The program performs the following operations:
-1. Generates a random 6×6 grayscale image (values 0-255)
-2. Defines a 3×3 edge-detection kernel
-3. Applies zero-padding to create an 8×8 matrix
-4. Performs convolution between the padded image and kernel
-5. Outputs the convolution result
+1. Allows the user to specify the image size (3-12)
+2. Generates a random grayscale image (values 0-255)
+3. Offers multiple kernel options (edge detection, sharpening, blur)
+4. Applies zero-padding around the original image
+5. Performs convolution between the padded image and the chosen kernel
+6. Outputs the convolution result
 
 ---
 
 ## Features
 
-- Random image generation for demonstration
-- Predefined edge-detection kernel
+- Configurable matrix sizes (3-12)
+- Multiple kernel options:
+  - Vertical Edge Detection
+  - Horizontal Edge Detection
+  - Sharpen
+  - Blur
+- Dynamic memory allocation for matrices
+- Input validation for user selections
 - Zero-padding implementation
 - 2D convolution operation
 - Formatted output display
+- Well-organized modular code structure
 
 ---
 
 ## Code Structure
 
-The program consists of the following functions:
+The project is organized into multiple files for better code management:
 
-1. `input(int image[6][6])`:
-   - Generates and displays a random 6×6 image matrix
+### Main Program
+- `main.cpp`: Contains the main control flow
 
-2. `kernel(int kernell[3][3])`:
-   - Initializes a 3×3 edge-detection kernel
-   - Displays the kernel matrix
+### Matrix Operations Module
+- `matrix_ops.h`: Declarations for matrix-related functions
+- `matrix_ops.cpp`: Implementations of matrix functions:
+  - `getValidatedMatrixSize()`: Validates and retrieves user input for matrix size
+  - `allocateMatrix()`: Allocates memory for a matrix
+  - `deallocateMatrix()`: Releases allocated memory
+  - `generateRandomImage()`: Creates a matrix with random pixel values
+  - `displayMatrix()`: Outputs a matrix to the console
+  - `initializeWithZeros()`: Sets all matrix elements to zero
 
-3. `padding(int padd[8][8])`:
-   - Creates an 8×8 zero-padded matrix
-
-4. `padded(int padd[8][8], int paddedd[8][8], int image[6][6])`:
-   - Combines the zero-padded matrix with the original image
-
-5. `convolution(int result[6][6], int paddedd[8][8], int kernell[3][3])`:
-   - Performs the convolution operation
-   - Stores results in a 6×6 matrix
+### Convolution Operations Module
+- `convolution.h`: Declarations for convolution-related functions
+- `convolution.cpp`: Implementations of convolution functions:
+  - `selectKernelType()`: Gets user choice for kernel type
+  - `initializeKernel()`: Sets up the kernel based on the selected type
+  - `displayKernel()`: Outputs the kernel to the console
+  - `applyPadding()`: Creates a padded version of the original image
+  - `performConvolution()`: Executes the convolution operation
 
 ---
 
 ## How It Works
 
 1. The program starts by seeding the random number generator
-2. It creates:
-   - A 6×6 image with random pixel values (0-255)
-   - A 3×3 kernel for edge detection
-   - An 8×8 padded matrix (6×6 image + 1 pixel border)
-3. The convolution operation:
-   - Slides the kernel over the padded image
-   - Computes element-wise multiplication and summation
-   - Produces a 6×6 output matrix
+2. It asks the user to specify the image size (within the range 3-12)
+3. It allocates memory for:
+   - The original image matrix
+   - The padded image matrix
+   - The result matrix
+4. It generates random values for the image
+5. It asks the user to select a kernel type
+6. It applies zero-padding to the original image
+7. It performs the convolution operation using the selected kernel
+8. It displays the result
+9. It cleans up allocated memory before exiting
 
 ---
 
 ## Output Example
-The original image matrix is:
+
 ```
+=== Image Convolution with Padding ===
+Enter matrix size (3-12): 6
+Original Image Matrix:
   156  248    9   87   22   81
   234   46  103   30  135  144
   213   93  112   32  132  111
    22  219  144  215  128  251
    89   63   63   27   30  187
   163  157  206   82   47   73
-```
 
-The kernel matrix is:
-```
-   -1    0    1
-   -1    0    1
-   -1    0    1
-```
+Select kernel type:
+1. Vertical Edge Detection
+2. Horizontal Edge Detection
+3. Sharpen
+4. Blur
+Enter your choice (1-4): 1
+Selected Kernel:
+  -1   0   1
+  -1   0   1
+  -1   0   1
+
 Convolution Result:
-```
-  294  -278  -177    45   108  -157
-  387  -379  -238    65   187  -289
-  358  -110   -81    36   229  -395
-  375    -5  -101   -29   275  -290
-  439   139  -115  -208   187  -205
-  220    17  -111  -192   151   -77
+  294 -278 -177   45  108 -157
+  387 -379 -238   65  187 -289
+  358 -110  -81   36  229 -395
+  375   -5 -101  -29  275 -290
+  439  139 -115 -208  187 -205
+  220   17 -111 -192  151  -77
 ```
 
 ---
-
 
 ## Dependencies
 
@@ -118,42 +139,43 @@ Convolution Result:
 
 ## Build Instructions
 
-1. Compile the code with any standard C++ compiler:
+1. Compile all source files together:
 ```bash
-g++ main.cpp -o convolution
+g++ main.cpp matrix_ops.cpp convolution.cpp -o image_convolution
 ```
 
 2. Run the executable:
 ```bash
-./convolution
+./image_convolution
 ```
 
 ---
 
 ## Limitations
 
-- Fixed matrix sizes (6×6 image, 3×3 kernel)
-- Uses simple zero-padding
-- Random image generation may not be suitable for all use cases
-- No input validation
-- Basic edge detection kernel only
+- Only supports square matrices
+- Limited to grayscale images (single channel)
+- Uses simple zero-padding only
+- Random image generation (no file input)
+- Fixed kernel size (3×3)
+- No visualization beyond text output
 
 ---
 
 ## Possible Improvements
 
-1. Make matrix sizes configurable
-2. Add support for image file input
-3. Implement different padding strategies
-4. Add more kernel options
-5. Include normalization of output
-6. Add visualization of results
-7. Optimize convolution operation
-8. Add multi-channel (color) image support
-9. Implement boundary handling options
-10. Add benchmarking capabilities
+1. Add support for image file input/output
+2. Implement different padding strategies (reflect, replicate, etc.)
+3. Support non-square matrices and images
+4. Add more kernel options and custom kernels
+5. Implement normalization strategies for outputs
+6. Add graphical visualization of results
+7. Support multi-channel (color) image processing
+8. Implement more boundary handling options
+9. Add benchmarking capabilities
+10. Implement multi-threading for performance on larger matrices
 
 ---
 
-This implementation serves as an educational example of 2D convolution in digital image processing.
+This implementation demonstrates important concepts of digital image processing while providing a flexible, modular codebase for educational purposes.
 
