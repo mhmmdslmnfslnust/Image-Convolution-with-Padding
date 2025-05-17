@@ -1,50 +1,61 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <iomanip>
 #include "matrix_ops.h"
 #include "convolution.h"
 
-using namespace std;
-
-// Configuration constants
-const int MIN_SIZE = 3;
-const int MAX_SIZE = 12;
+/**
+ * Image Convolution Program with Padding
+ * 
+ * This program demonstrates the application of convolution operations
+ * on matrices that represent images, with support for padding.
+ * 
+ * Features:
+ * - Configurable matrix sizes
+ * - Multiple kernel options
+ * - Dynamic memory allocation
+ * - Zero padding to handle boundaries
+ */
 
 int main() {
+    // Seed the random number generator for reproducibility
     srand(static_cast<unsigned int>(time(nullptr)));
-
-    // Get image size from user with validation
-    int imageSize;
-    do {
-        cout << "Enter image size (" << MIN_SIZE << "-" << MAX_SIZE << "): ";
-        cin >> imageSize;
-    } while (imageSize < MIN_SIZE || imageSize > MAX_SIZE);
-
-    // Create and initialize matrices
-    ImageMatrix* originalImage = createImageMatrix(imageSize);
-    ImageMatrix* paddedImage = createImageMatrix(imageSize + 2);
-    ImageMatrix* resultImage = createImageMatrix(imageSize);
     
-    // Generate random image
-    generateRandomImage(originalImage);
-    displayMatrix(originalImage, "Original Image");
-
-    // Select and display kernel
-    KernelMatrix* kernel = selectKernel();
+    // Get validated matrix size from user
+    std::cout << "=== Image Convolution with Padding ===" << std::endl;
+    int imageSize = getValidatedMatrixSize();
     
-    // Apply padding and perform convolution
-    applyPadding(paddedImage, originalImage);
-    performConvolution(resultImage, paddedImage, kernel);
+    // Calculate padded matrix size (original + 2 for padding)
+    int paddedSize = imageSize + 2;
     
-    // Display result
-    displayMatrix(resultImage, "Convolution Result");
-
-    // Cleanup
-    deleteImageMatrix(originalImage);
-    deleteImageMatrix(paddedImage);
-    deleteImageMatrix(resultImage);
-    delete kernel;
-
+    // Allocate memory for matrices
+    int** originalImage = allocateMatrix(imageSize);
+    int** paddedImage = allocateMatrix(paddedSize);
+    int** resultImage = allocateMatrix(imageSize);
+    
+    // Initialize original image with random values
+    generateRandomImage(originalImage, imageSize);
+    displayMatrix(originalImage, imageSize, "Original Image Matrix");
+    
+    // Get kernel selection from user and initialize it
+    int kernelType = selectKernelType();
+    int kernel[3][3];
+    initializeKernel(kernel, kernelType);
+    displayKernel(kernel);
+    
+    // Apply zero padding around the original image
+    applyPadding(paddedImage, paddedSize, originalImage, imageSize);
+    
+    // Perform convolution operation
+    performConvolution(resultImage, imageSize, paddedImage, paddedSize, kernel);
+    
+    // Display the result
+    displayMatrix(resultImage, imageSize, "Convolution Result");
+    
+    // Clean up allocated memory
+    deallocateMatrix(originalImage, imageSize);
+    deallocateMatrix(paddedImage, paddedSize);
+    deallocateMatrix(resultImage, imageSize);
+    
     return 0;
 }
