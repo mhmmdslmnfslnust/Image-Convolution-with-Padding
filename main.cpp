@@ -1,141 +1,61 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <iomanip>
+#include "matrix_ops.h"
+#include "convolution.h"
 
-using namespace std;
+/**
+ * Image Convolution Program with Padding
+ * 
+ * This program demonstrates the application of convolution operations
+ * on matrices that represent images, with support for padding.
+ * 
+ * Features:
+ * - Configurable matrix sizes
+ * - Multiple kernel options
+ * - Dynamic memory allocation
+ * - Zero padding to handle boundaries
+ */
 
-// Function prototypes
-void input(int image[6][6]);
-void kernel(int kernell[3][3]);
-void padding(int padd[8][8]);
-void padded(int padd[8][8], int paddedd[8][8], int image[6][6]);
-void convolution(int result[6][6], int paddedd[8][8], int kernell[3][3]);
-
-int main()
-{
-    // Seed the random number generator
-    srand(time(0));
-
-    int image[6][6]; // Assuming a 6x6 image for simplicity
-    int padd[8][8];
-    int paddedd[8][8];
-    int kernell[3][3];
-
-    // Call the input function
-    input(image);
-    cout<<endl;
-    // Call the kernel function
-    kernel(kernell);
-    cout<<endl;
-    // Call the padding function
-    padding(padd);
-
-    // Call the padded function
-    padded(padd, paddedd, image);
-
-    // Perform convolution
-    int result[6][6];
-    convolution(result, paddedd, kernell);
-
-    // Display the result of convolution
+int main() {
+    // Seed the random number generator for reproducibility
+    srand(static_cast<unsigned int>(time(nullptr)));
     
-    cout << "Convolution Result:" << endl;
-    for (int i = 0; i < 6; i++)
-    {
-        for (int j = 0; j < 6; j++)
-        {
-            cout <<setw(5)<< result[i][j] << " ";
-        }
-        cout << endl;
-    }
-
+    // Get validated matrix size from user
+    std::cout << "=== Image Convolution with Padding ===" << std::endl;
+    int imageSize = getValidatedMatrixSize();
+    
+    // Calculate padded matrix size (original + 2 for padding)
+    int paddedSize = imageSize + 2;
+    
+    // Allocate memory for matrices
+    int** originalImage = allocateMatrix(imageSize);
+    int** paddedImage = allocateMatrix(paddedSize);
+    int** resultImage = allocateMatrix(imageSize);
+    
+    // Initialize original image with random values
+    generateRandomImage(originalImage, imageSize);
+    displayMatrix(originalImage, imageSize, "Original Image Matrix");
+    
+    // Get kernel selection from user and initialize it
+    int kernelType = selectKernelType();
+    int kernel[3][3];
+    initializeKernel(kernel, kernelType);
+    displayKernel(kernel);
+    
+    // Apply zero padding around the original image
+    applyPadding(paddedImage, paddedSize, originalImage, imageSize);
+    
+    // Perform convolution operation
+    performConvolution(resultImage, imageSize, paddedImage, paddedSize, kernel);
+    
+    // Display the result
+    displayMatrix(resultImage, imageSize, "Convolution Result");
+    
+    // Clean up allocated memory
+    deallocateMatrix(originalImage, imageSize);
+    deallocateMatrix(paddedImage, paddedSize);
+    deallocateMatrix(resultImage, imageSize);
+    
     return 0;
-}
-
-void input(int image[6][6])
-{   cout<<"The original image matrix is:"<<endl;
-    for (int i = 0; i < 6; i++)
-    {
-        for (int j = 0; j < 6; j++)
-        {
-            // Generate random values between 0 and 255 for grayscale image
-            image[i][j] = rand() % 256;
-            cout << setw(5)<< image[i][j];
-        }cout << endl;
-    }
-}
-
-void kernel(int kernell[3][3])
-{
-    // Assigning values to the kernel directly
-    int values[3][3] = {
-        {-1, 0, 1},
-        {-1, 0, 1},
-        {-1, 0, 1}
-    };
-
-    // Copying values to the kernell array
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < 3; j++)
-        {
-            kernell[i][j] = values[i][j];
-        }
-    }
-    cout<<"The kernel matrix is:"<<endl;
-
-    // Accessing elements of the kernel
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < 3; j++)
-        {
-            cout << setw(5) << kernell[i][j];
-        }cout<<endl;
-    }
-}
-
-void padding(int padd[8][8])
-{
-    for (int i = 0; i < 8; i++)
-    {
-        for (int j = 0; j < 8; j++)
-        {
-            padd[i][j] = 0;
-        }
-    }
-}
-
-void padded(int padd[8][8], int paddedd[8][8], int image[6][6])
-{
-    for (int i = 0; i < 8; i++)
-    {
-        for (int j = 0; j < 8; j++)
-        {
-            if(i==0||i==7||j==0||j==7){
-                paddedd[i][j] = padd[i][j]; // Corrected the indices
-            }else{
-                paddedd[i][j] = padd[i][j] + image[i-1][j-1]; // Corrected the indices
-            }
-            
-        }
-    }
-}
-
-void convolution(int result[6][6], int paddedd[8][8], int kernell[3][3])
-{
-    for (int i = 0; i < 6; i++)
-    {
-        for (int j = 0; j < 6; j++)
-        {
-            result[i][j] = 0;
-            for (int ki = 0; ki < 3; ki++)
-            {
-                for (int kj = 0; kj < 3; kj++)
-                {
-                    result[i][j] += paddedd[i + ki][j + kj] * kernell[ki][kj];
-                }
-            }
-        }
-    }
 }
